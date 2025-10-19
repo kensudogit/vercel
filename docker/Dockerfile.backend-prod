@@ -1,0 +1,57 @@
+# 本番環境用バックエンドDockerfile
+FROM openjdk:17-jdk-slim as builder
+
+# 作業ディレクトリを設定
+WORKDIR /app
+
+# Gradle Wrapperとビルドファイルをコピー
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+
+# 依存関係をダウンロード（キャッシュ最適化）
+RUN ./gradlew dependencies --no-daemon
+
+# ソースコードをコピー
+COPY backend backend
+
+# アプリケーションをビルド
+RUN ./gradlew :backend:bootJar --no-daemon
+
+# 本番用イメージ
+FROM openjdk:17-jre-slim
+
+# セキュリティ設定
+RUN apt-get update && \
+    apt-get install -y curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# 非rootユーザーを作成
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# 作業ディレクトリを設定
+WORKDIR /app
+
+# ビルドされたJARファイルをコピー
+COPY --from=builder /app/backend/build/libs/*.jar app.jar
+
+# ファイルの所有者を変更
+RUN chown -R appuser:appuser /app
+
+# 非rootユーザーに切り替え
+USER appuser
+
+# ヘルスチェック用のエンドポイント
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# ポートを公開
+EXPOSE 8080
+
+# JVM設定（本番環境最適化）
+ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
+
+# アプリケーションを起動
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

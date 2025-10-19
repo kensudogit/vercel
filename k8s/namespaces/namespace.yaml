@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vercel-microservices
+  labels:
+    name: vercel-microservices
+    app: vercel
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vercel-database
+  labels:
+    name: vercel-database
+    app: vercel

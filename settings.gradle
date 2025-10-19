@@ -1,0 +1,57 @@
+rootProject.name = 'vercel-microservices'
+
+include 'services:user-service'
+include 'services:product-service'
+include 'services:order-service'
+include 'services:api-gateway'
+include 'services:notification-service'
+include 'shared:common-lib'
+include 'frontend'
+
+// Enable Gradle build cache
+buildCache {
+    local {
+        enabled = true
+    }
+}
+
+// Configure all projects
+allprojects {
+    group = 'com.vercel'
+    version = '0.0.1-SNAPSHOT'
+    
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+// Configure subprojects
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+        testImplementation 'org.assertj:assertj-core:3.24.2'
+        testImplementation 'org.mockito:mockito-core:5.5.0'
+    }
+    
+    test {
+        useJUnitPlatform()
+        finalizedBy jacocoTestReport
+    }
+    
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            xml.required = true
+            html.required = true
+        }
+    }
+}

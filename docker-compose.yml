@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: vercel-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: vercel_user
+      POSTGRES_PASSWORD: vercel_password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=C"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - vercel-network
+
+  # Next.js Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vercel-frontend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://vercel_user:vercel_password@postgres:5432/postgres
+      - JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    networks:
+      - vercel-network
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+
+  # Redis (for caching and sessions)
+  redis:
+    image: redis:7-alpine
+    container_name: vercel-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - vercel-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  vercel-network:
+    driver: bridge

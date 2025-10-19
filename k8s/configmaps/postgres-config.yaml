@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: vercel-database
+data:
+  POSTGRES_DB: "postgres"
+  POSTGRES_USER: "vercel_user"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secret
+  namespace: vercel-database
+type: Opaque
+data:
+  POSTGRES_PASSWORD: dmVyY2VsX3Bhc3N3b3Jk  # vercel_password in base64
