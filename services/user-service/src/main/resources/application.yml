@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://user-db:5432/user_db
     username: user_db_user
-    password: user_db_password
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -42,5 +42,5 @@ logging:
     org.seasar.doma: DEBUG
 
 jwt:
-  secret: mySecretKey
+  secret: ${JWT_SECRET}
   expiration: 86400000
