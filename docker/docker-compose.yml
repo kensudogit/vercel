@@ -10,7 +10,7 @@ services:
     environment:
       POSTGRES_DB: vercel_db
       POSTGRES_USER: vercel_user
-      POSTGRES_PASSWORD: vercel_password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
