@@ -1,6 +1,45 @@
-# Vercel IT Consultant Management System
+# IT Consultant Management — Next.js / Prisma / PostgreSQL
 
-売上管理システム - ITコンサルタント向けのWebアプリケーション
+> **Professional Services Management** — ITコンサルタント向けに、案件・請求書・経費・売上レポート・ダッシュボードを統合した業務管理Webアプリケーションです。
+>
+> **Stack:** Next.js 15 · React · TypeScript · Prisma · PostgreSQL · Redis · Docker
+
+## Architecture
+
+```text
+Consultant / Administrator
+          │
+          ▼
+     Next.js UI
+          │
+          ▼
+ Next.js API / Prisma
+      │         │
+      ▼         ▼
+ PostgreSQL    Redis
+```
+
+## Business Capabilities
+
+- プロジェクト・案件管理
+- 請求書管理
+- 経費管理
+- 売上・収益レポート
+- 管理ダッシュボード
+- ユーザー認証・認可
+
+## Engineering Focus
+
+- Next.js App Routerを利用したフルスタック構成
+- Prismaによる型安全なデータアクセス
+- PostgreSQLによる業務データ管理
+- Redisを利用できるキャッシュ構成
+- Docker / Docker Composeによる環境再現
+- Professional Services業務のデジタル化
+
+## Portfolio Context
+
+This repository represents the **Professional Services / Business Management** track of my portfolio. The repository name reflects its original deployment target, while the implemented product is an IT consultant management system.
 
 ## 🚀 技術スタック
 
