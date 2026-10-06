@@ -85,8 +85,8 @@ cp .env.example .env.local
 `.env.local`ファイルを編集して、必要な環境変数を設定してください：
 
 ```env
-DATABASE_URL="postgresql://vercel_user:vercel_password@localhost:5432/postgres"
-JWT_SECRET="your-super-secret-jwt-key-change-this-in-production"
+DATABASE_URL="${DATABASE_URL}"
+JWT_SECRET="${JWT_SECRET}"
 NODE_ENV="development"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 REDIS_URL="redis://localhost:6379"
@@ -144,7 +144,7 @@ npm run dev
 データベース初期化後、以下のテストユーザーが作成されます：
 
 - **Email**: admin@example.com
-- **Password**: password123
+- **Password**: `<set-a-secure-password>`
 - **Role**: ADMIN
 
 ## 🔧 開発コマンド
@@ -240,3 +240,8 @@ docker-compose -f docker-compose.yml up -d --build
 ## 📄 ライセンス
 
 このプロジェクトはMITライセンスの下で公開されています。"# vercel" 
+
+
+### Security note
+
+Do not commit real credentials or secrets to this repository. Configure database passwords and JWT secrets through environment variables or the deployment platform's secret management facility.
